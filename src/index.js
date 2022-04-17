@@ -7,23 +7,27 @@ let KEY ='26793490-dae10d4013ec617276bbdd3a4';
 axios.defaults.baseURL = `https://pixabay.com/api/?key=${KEY}&image_type=photo&orientation=horizontal&safesearch=true`;
 const refForm = document.querySelector(".search-form");
 const refGallery = document.querySelector(".gallery");
-async function getImage(event){
-    event.preventDefault();
-    console.dir(event.currentTarget);
-    const search=event.currentTarget.elements.searchQuery.value;
+async function getImage(search){
+    // console.dir(event.currentTarget);
+  console.log(search);
     const { data:{hits} } = await axios.get(`&q=${search}`);
     if (hits.length === 0) { throw new Error() };
     return hits
-    .then(renderCards)
-    .catch(() => Notiflix.Notify.failure('"Sorry, there are no images matching your search query. Please try again."'));
 };
-refForm.addEventListener('click',getImage);
-  
+refForm.addEventListener('click', async (event) => {
+  const search = event.currentTarget.elements.searchQuery.value;
+  event.preventDefault();
+  try {
+    const cards = await getImage(search);
+    console.log(cards);
+    renderCards(cards);
+  } catch {Notiflix.Notify.failure('"Sorry, there are no images matching your search query. Please try again."')}
+});
 
   function renderCards (cards) {
     refGallery.innerHTML='';
-    const markup = cards.map(({webformatURL,largeImageURL,tags,likes,views,comments,downloads}) => 
-    `<div class="photo-card">
+    const markup = cards.map(({ webformatURL, tags, likes, views, comments, downloads }) =>
+      `<div class="photo-card">
     <img src="${webformatURL}" alt="${tags}" loading="lazy" />
     <div class="info">
       <p class="info-item">
@@ -39,8 +43,8 @@ refForm.addEventListener('click',getImage);
         <b>${downloads}Downloads</b>
       </p>
     </div>
-    </div>`).join()
-    refGallery.insertAdjacentElement('beforeend',markup)};
+    </div>`).join();
+    refGallery.insertAdjacentHTML('beforeend',markup)};
 
       
 
