@@ -3,13 +3,9 @@ import './sass/main.scss';
 import Notiflix from 'notiflix';
 import { getImage, perPage } from './gettingImages';
 import { renderCards, cleanupCards } from './renderSL';
-// import SimpleLightbox from 'simplelightbox';
-// Дополнительный импорт стилей
-// import 'simplelightbox/dist/simple-lightbox.min.css';
 
 let currentPage;
 let search;
-// let totalPages;
 
 function isLastPage(totalEntries, page) {
   return page * perPage >= totalEntries;
@@ -23,6 +19,7 @@ console.dir(refBtn);
 
 refForm.addEventListener('submit', async event => {
   // initial cleanup
+  refBtn.style.display = 'none';
   currentPage = 1;
   cleanupCards();
 
@@ -67,16 +64,3 @@ refBtn.addEventListener('click', async event => {
     Notiflix.Notify.failure('"Sorry, Please try again."');
   }
 });
-// new SimpleLightbox('.gallery a', {
-//   overlay: true,
-//   nav: true,
-//   navText: ['←', '→'],
-//   captionSelector: 'img',
-//   captionType: 'attr',
-//   captionsData: 'alt',
-//   captionPosition: 'bottom',
-//   captionDelay: 250,
-//   close: true,
-//   closeText: '×',
-//   docClose: true,
-// });
